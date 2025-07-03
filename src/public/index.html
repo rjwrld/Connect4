@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect4 - Juego</title>
+    <link rel="stylesheet" href="css/principal.css">
+    <link rel="stylesheet" href="css/juego.css">
+    <link rel="stylesheet" href="css/componentes.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <h1>Connect4</h1>
+            <nav class="nav-principal">
+                <button onclick="mostrarMenuPrincipal()" class="btn-nav">Menú Principal</button>
+            </nav>
+        </header>
+
+        <!-- Menú Principal -->
+        <div id="menu-principal" class="pantalla activa">
+            <div class="contenido-principal">
+                <h2>Bienvenido a Connect4</h2>
+                <p>Selecciona una opción para comenzar:</p>
+                <div class="opciones-menu">
+                    <button onclick="mostrarCrearJugador()" class="btn btn-primary">
+                        📝 Crear Jugador Nuevo
+                    </button>
+                    <button onclick="mostrarCrearPartida()" class="btn btn-primary">
+                        🎮 Crear Partida Nueva
+                    </button>
+                    <button onclick="mostrarCargarPartida()" class="btn btn-primary">
+                        📂 Cargar Partida Existente
+                    </button>
+                    <button onclick="mostrarEscalafon()" class="btn btn-primary">
+                        🏆 Mostrar Escalafón
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crear Jugador -->
+        <div id="crear-jugador" class="pantalla">
+            <div class="contenido-pantalla">
+                <h2>Crear Jugador Nuevo</h2>
+                <form id="form-crear-jugador" class="formulario">
+                    <div class="campo">
+                        <label for="identificacion">Identificación:</label>
+                        <input type="number" id="identificacion" name="identificacion" 
+                               placeholder="Ingrese número de identificación" required>
+                    </div>
+                    <div class="campo">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" 
+                               placeholder="Ingrese nombre completo" required maxlength="255">
+                    </div>
+                    <div class="botones">
+                        <button type="submit" class="btn btn-success">Crear Jugador</button>
+                        <button type="button" onclick="mostrarMenuPrincipal()" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+                <div id="mensaje-jugador" class="mensaje"></div>
+            </div>
+        </div>
+
+        <!-- Crear Partida -->
+        <div id="crear-partida" class="pantalla">
+            <div class="contenido-pantalla">
+                <h2>Crear Partida Nueva</h2>
+                <form id="form-crear-partida" class="formulario">
+                    <div class="campo">
+                        <label for="jugador1">Jugador #1:</label>
+                        <select id="jugador1" name="jugador1" required>
+                            <option value="">Seleccione un jugador</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="jugador2">Jugador #2:</label>
+                        <select id="jugador2" name="jugador2" required>
+                            <option value="">Seleccione un jugador</option>
+                        </select>
+                    </div>
+                    <div class="botones">
+                        <button type="submit" class="btn btn-success">Crear Partida</button>
+                        <button type="button" onclick="mostrarMenuPrincipal()" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+                <div id="mensaje-partida" class="mensaje"></div>
+            </div>
+        </div>
+
+        <!-- Juego -->
+        <div id="juego" class="pantalla">
+            <div class="contenido-juego">
+                <div class="info-partida">
+                    <h2>Partida en Curso</h2>
+                    <div class="jugadores-info">
+                        <div class="jugador-info jugador1">
+                            <span class="ficha-jugador ficha-roja">●</span>
+                            <span id="nombre-jugador1"></span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="jugador-info jugador2">
+                            <span class="ficha-jugador ficha-amarilla">●</span>
+                            <span id="nombre-jugador2"></span>
+                        </div>
+                    </div>
+                    <div id="turno-actual" class="turno-actual">
+                        Es el turno de: <span id="jugador-turno"></span>
+                    </div>
+                </div>
+
+                <!-- Tablero de Juego -->
+                <div class="contenedor-tablero">
+                    <div class="botones-columna">
+                        <button onclick="jugarColumna('A')" class="btn-columna" data-columna="A">A</button>
+                        <button onclick="jugarColumna('B')" class="btn-columna" data-columna="B">B</button>
+                        <button onclick="jugarColumna('C')" class="btn-columna" data-columna="C">C</button>
+                        <button onclick="jugarColumna('D')" class="btn-columna" data-columna="D">D</button>
+                        <button onclick="jugarColumna('E')" class="btn-columna" data-columna="E">E</button>
+                        <button onclick="jugarColumna('F')" class="btn-columna" data-columna="F">F</button>
+                        <button onclick="jugarColumna('G')" class="btn-columna" data-columna="G">G</button>
+                    </div>
+                    
+                    <table id="tablero-juego" class="tablero-connect4">
+                        <tbody id="cuerpo-tablero">
+                            <!-- Las filas se generan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="controles-juego">
+                    <button onclick="reiniciarPartida()" class="btn btn-warning">🔄 Reiniciar Partida</button>
+                    <button onclick="mostrarMenuPrincipal()" class="btn btn-secondary">🏠 Menú Principal</button>
+                </div>
+
+                <div id="resultado-juego" class="resultado-juego"></div>
+            </div>
+        </div>
+
+        <!-- Cargar Partida -->
+        <div id="cargar-partida" class="pantalla">
+            <div class="contenido-pantalla">
+                <h2>Cargar Partida Existente</h2>
+                <div id="lista-partidas" class="lista-partidas">
+                    <!-- Las partidas se cargan dinámicamente -->
+                </div>
+                <div class="botones">
+                    <button onclick="mostrarMenuPrincipal()" class="btn btn-secondary">Volver al Menú</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Escalafón -->
+        <div id="escalafon" class="pantalla">
+            <div class="contenido-pantalla">
+                <h2>Escalafón de Jugadores</h2>
+                <div class="tabla-container">
+                    <table id="tabla-escalafon" class="tabla-escalafon">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Identificación</th>
+                                <th>Nombre</th>
+                                <th>Marcador</th>
+                                <th>Ganadas</th>
+                                <th>Perdidas</th>
+                                <th>Empatadas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-escalafon">
+                            <!-- Los datos se cargan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="botones">
+                    <button onclick="cargarEscalafon()" class="btn btn-primary">🔄 Actualizar</button>
+                    <button onclick="mostrarMenuPrincipal()" class="btn btn-secondary">Volver al Menú</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/jugadores.js"></script>
+    <script src="js/juego.js"></script>
+    <script src="js/escalafon.js"></script>
+    <script src="js/principal.js"></script>
+</body>
+</html> 
