@@ -7,10 +7,32 @@ import {
   ColumnaLetra,
   EstadoPartida,
   ResultadoPartida,
-  ValidadorPartida
+  ValidadorPartida,
+  Tablero
 } from '../models/Partida';
 
 const prisma = new PrismaClient();
+
+// Funciones auxiliares para manejar JSON con SQL Server
+const TableroUtils = {
+  // Convertir tablero a JSON string para SQL Server
+  toJson(tablero: Tablero): string {
+    return JSON.stringify(tablero);
+  },
+  
+  // Convertir JSON string a tablero desde SQL Server
+  fromJson(tableroJson: string | Tablero): Tablero {
+    if (typeof tableroJson === 'string') {
+      try {
+        return JSON.parse(tableroJson) as Tablero;
+      } catch (error) {
+        console.error('Error parsing tablero JSON:', error);
+        return LogicaConnect4.crearTableroVacio();
+      }
+    }
+    return tableroJson as Tablero;
+  }
+};
 
 export class PartidaControlador {
   // GET /api/partidas - Obtener todas las partidas
@@ -126,7 +148,7 @@ export class PartidaControlador {
         data: {
           jugador1Id,
           jugador2Id,
-          tablero: tableroVacio,
+          tablero: TableroUtils.toJson(tableroVacio),
           turnoActual: 1,
           estado: EstadoPartida.EN_CURSO
         },
@@ -218,7 +240,7 @@ export class PartidaControlador {
       }
 
       // Obtener tablero actual
-      const tablero = partida.tablero as number[][];
+      const tablero = TableroUtils.fromJson(partida.tablero as string);
       const columnaIndice = LogicaConnect4.letraAIndice(columnaLetra);
 
       // Verificar que se puede jugar en la columna
@@ -240,7 +262,7 @@ export class PartidaControlador {
       const hayEmpate = LogicaConnect4.verificarEmpate(tablero);
 
       let datosActualizacion: any = {
-        tablero,
+        tablero: TableroUtils.toJson(tablero),
         turnoActual: partida.turnoActual === 1 ? 2 : 1 // Cambiar turno
       };
 
@@ -339,7 +361,7 @@ export class PartidaControlador {
         data: {
           jugador1Id: partidaOriginal.jugador1Id,
           jugador2Id: partidaOriginal.jugador2Id,
-          tablero: tableroVacio,
+          tablero: TableroUtils.toJson(tableroVacio),
           turnoActual: 1,
           estado: EstadoPartida.EN_CURSO
         },
