@@ -12,9 +12,15 @@ export class JugadorControlador {
         orderBy: { fechaCreacion: 'desc' }
       });
       
+      // Convertir BigInt a string para JSON
+      const jugadoresConvertidos = jugadores.map(jugador => ({
+        ...jugador,
+        identificacion: jugador.identificacion.toString()
+      }));
+      
       res.json({
         exito: true,
-        datos: jugadores
+        datos: jugadoresConvertidos
       });
     } catch (error) {
       console.error('Error al obtener jugadores:', error);
@@ -60,7 +66,10 @@ export class JugadorControlador {
 
       res.json({
         exito: true,
-        datos: jugador
+        datos: {
+          ...jugador,
+          identificacion: jugador.identificacion.toString()
+        }
       });
     } catch (error) {
       console.error('Error al obtener jugador:', error);
@@ -75,6 +84,8 @@ export class JugadorControlador {
   async crear(req: Request, res: Response): Promise<void> {
     try {
       const { identificacion, nombre }: CrearJugadorDTO = req.body;
+      
+      console.log('📝 Datos recibidos para crear jugador:', { identificacion, nombre });
       
       // Validar datos
       const errores = ValidadorJugador.validarDatosCreacion({
@@ -112,21 +123,26 @@ export class JugadorControlador {
         }
       });
 
+      console.log('🎉 Jugador creado exitosamente:', nuevoJugador);
+
       res.status(201).json({
         exito: true,
         mensaje: 'Jugador creado exitosamente',
-        datos: nuevoJugador
+        datos: {
+          ...nuevoJugador,
+          identificacion: nuevoJugador.identificacion.toString()
+        }
       });
-    } catch (error) {
-      console.error('Error al crear jugador:', error);
+    } catch (error: any) {
+      console.error('❌ Error completo al crear jugador:', error);
+      console.error('❌ Error name:', error?.name);
+      console.error('❌ Error message:', error?.message);
       res.status(500).json({
         exito: false,
-        mensaje: 'Error interno del servidor'
+        mensaje: 'Error interno del servidor al crear jugador'
       });
     }
-  }
-
-  // PUT /api/jugadores/:id - Actualizar estadísticas de jugador
+  }  // PUT /api/jugadores/:id - Actualizar estadísticas de jugador
   async actualizarEstadisticas(req: Request, res: Response): Promise<void> {
     try {
       const idParam = req.params.id;
@@ -168,7 +184,10 @@ export class JugadorControlador {
       res.json({
         exito: true,
         mensaje: 'Estadísticas actualizadas exitosamente',
-        datos: jugadorActualizado
+        datos: {
+          ...jugadorActualizado,
+          identificacion: jugadorActualizado.identificacion.toString()
+        }
       });
     } catch (error) {
       console.error('Error al actualizar jugador:', error);

@@ -1,0 +1,206 @@
+/* Estilos específicos para el juego Connect4 */
+
+/* Contenedor del juego */
+.contenido-juego {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Información de la partida */
+.info-partida {
+    background: var(--color-blanco);
+    border-radius: var(--radio-border);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--sombra);
+}
+
+.jugadores-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.jugador-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+}
+
+.ficha-jugador {
+    font-size: 1.5rem;
+    display: inline-block;
+}
+
+.ficha-roja {
+    color: #dc2626;
+}
+
+.ficha-amarilla {
+    color: #facc15;
+}
+
+.vs {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-secundario);
+}
+
+.turno-actual {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-primario);
+}
+
+/* Tablero de juego */
+.contenedor-tablero {
+    margin: 2rem 0;
+    display: inline-block;
+    background: var(--color-blanco);
+    border-radius: var(--radio-border);
+    padding: 1rem;
+    box-shadow: var(--sombra);
+}
+
+.botones-columna {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.btn-columna {
+    background: var(--color-primario);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: var(--radio-border);
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-columna:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.btn-columna:disabled {
+    background: var(--color-secundario);
+    cursor: not-allowed;
+}
+
+/* Tablero Connect4 */
+.tablero-connect4 {
+    border-collapse: separate;
+    border-spacing: 4px;
+    background: #1e40af;
+    padding: 8px;
+    border-radius: var(--radio-border);
+}
+
+.celda-tablero {
+    width: 50px;
+    height: 50px;
+    background: #1e40af;
+    border-radius: 50%;
+    position: relative;
+}
+
+.ficha {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 5px;
+    border: 2px solid #1e40af;
+    transition: all 0.3s ease;
+}
+
+.ficha.vacia {
+    background: var(--color-blanco);
+}
+
+.ficha.roja {
+    background: #dc2626;
+    border-color: #b91c1c;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+}
+
+.ficha.amarilla {
+    background: #facc15;
+    border-color: #eab308;
+    box-shadow: 0 2px 4px rgba(250, 204, 21, 0.3);
+}
+
+/* Controles del juego */
+.controles-juego {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Resultado del juego */
+.resultado-juego {
+    margin-top: 2rem;
+}
+
+.resultado-final {
+    background: var(--color-blanco);
+    border-radius: var(--radio-border);
+    padding: 2rem;
+    box-shadow: var(--sombra);
+    text-align: center;
+}
+
+.resultado-final.ganador {
+    border-left: 4px solid var(--color-exito);
+}
+
+.resultado-final.empate {
+    border-left: 4px solid var(--color-advertencia);
+}
+
+.resultado-final h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.botones-resultado {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contenido-juego {
+        padding: 1rem;
+    }
+    
+    .jugadores-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .vs {
+        transform: rotate(90deg);
+    }
+    
+    .tablero-connect4 {
+        transform: scale(0.8);
+    }
+    
+    .controles-juego {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .botones-resultado {
+        flex-direction: column;
+    }
+}

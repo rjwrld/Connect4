@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import jugadoresRutas from './routes/jugadores';
 import partidasRutas from './routes/partidas';
 import escalafonRutas from './routes/escalafon';
+import consultarNombreRutas from './routes/consultar-nombre';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/jugadores', jugadoresRutas);
 app.use('/api/partidas', partidasRutas);
 app.use('/api/escalafon', escalafonRutas);
+app.use('/api/consultar-nombre', consultarNombreRutas);
 
 // Ruta principal - servir el index.html
 app.get('/', (req, res) => {
