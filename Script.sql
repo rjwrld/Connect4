@@ -1,3 +1,29 @@
+CREATE DATABASE CuatroEnLinea;
+GO
+
+USE CuatroEnLinea;
+GO
+
+CREATE TABLE Jugador (
+    idJugador INT PRIMARY KEY,
+    nombre NVARCHAR(100) NOT NULL,
+    marcador INT NOT NULL DEFAULT 0
+);
+
+
+CREATE TABLE Partida (
+    idPartida INT PRIMARY KEY IDENTITY(1,1),
+    idJugador1 INT NOT NULL,
+    idJugador2 INT NOT NULL,
+    estadoTablero NVARCHAR(MAX) NOT NULL, -- JSON del tablero
+    historialMovimientos NVARCHAR(MAX) NULL, -- JSON con movimientos opcional
+    resultado NVARCHAR(50), -- 'Jugador 1', 'Jugador 2', 'Empate'
+    fechaInicio DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (idJugador1) REFERENCES Jugador(idJugador),
+    FOREIGN KEY (idJugador2) REFERENCES Jugador(idJugador),
+    CHECK (idJugador1 <> idJugador2)
+);
+
 -- SCRIPT PARA MIGRAR TU BASE DE DATOS ACTUAL AL ESQUEMA DE PRISMA
 -- Ejecuta este script en SQL Server Management Studio
 -- Cambia por el nombre real de tu base de datos si es diferente
@@ -108,42 +134,4 @@ CREATE TABLE movimientos (
     CONSTRAINT FK_movimientos_jugador FOREIGN KEY (jugador_id) REFERENCES jugador(id)
 );
 PRINT '✅ Tabla movimientos creada';
-GO
-
--- PASO 8: Insertar datos de prueba adicionales
---INSERT INTO jugador (identificacion, nombre, marcador) VALUES 
---(901230815, 'DARREL ALEXANDER SANCHEZ VILLALOBOS', 0),
---(123456789, 'Juan Pérez González', 0),
---(987654321, 'María López Castro', 0);
---PRINT '✅ Datos de prueba agregados';
---GO
-
--- PASO 9: Verificar la migración
-PRINT '📋 RESUMEN DE LA MIGRACIÓN:';
-PRINT '============================';
-
-SELECT COUNT(*) as 'Total jugadores' FROM jugador;
-SELECT COUNT(*) as 'Total partidas' FROM partidas;
-SELECT COUNT(*) as 'Total movimientos' FROM movimientos;
-
-PRINT '';
-PRINT '🎯 ESTRUCTURA FINAL DE LA TABLA JUGADOR:';
-SELECT 
-    COLUMN_NAME as 'Columna',
-    DATA_TYPE as 'Tipo',
-    IS_NULLABLE as 'Permite NULL',
-    COLUMN_DEFAULT as 'Valor por defecto'
-FROM INFORMATION_SCHEMA.COLUMNS 
-WHERE TABLE_NAME = 'jugador'
-ORDER BY ORDINAL_POSITION;
-
-PRINT '';
-PRINT '✅ MIGRACIÓN COMPLETADA EXITOSAMENTE!';
-PRINT '🚀 Ahora tu base de datos es compatible con el código de Prisma';
-PRINT '📁 Tus tablas anteriores se guardaron como "Jugador_backup" y "Partida_backup"';
-PRINT '';
-PRINT '🔧 PRÓXIMOS PASOS:';
-PRINT '1. Ejecutar: npx prisma generate';
-PRINT '2. Ejecutar: npm run dev';
-PRINT '3. Probar creando un jugador en http://localhost:3000';
 GO
