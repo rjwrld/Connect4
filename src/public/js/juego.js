@@ -3,6 +3,14 @@
 let tableroJuego = [];
 let jugadorActual = 1;
 
+// Asignar eventos a los botones de columna
+document.querySelectorAll('.btn-columna').forEach(boton => {
+  boton.addEventListener('click', () => {
+    const letra = boton.dataset.columna;
+    jugarColumna(letra);
+  });
+});
+
 // Función para iniciar el juego
 async function iniciarJuego(partida) {
     try {
@@ -311,4 +319,5 @@ async function cargarPartida(partidaId) {
     } finally {
         mostrarLoading(false);
     }
+    
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { 
-  CrearPartidaDTO, 
+import {
+  CrearPartidaDTO,
   RealizarMovimientoDTO,
   LogicaConnect4,
   ColumnaLetra,
@@ -13,13 +13,19 @@ import {
 
 const prisma = new PrismaClient();
 
+function convertirBigIntAString(obj: any): any {
+  return JSON.parse(JSON.stringify(obj, (_, value) =>
+    typeof value === 'bigint' ? value.toString() : value
+  ));
+}
+
 // Funciones auxiliares para manejar JSON con SQL Server
 const TableroUtils = {
   // Convertir tablero a JSON string para SQL Server
   toJson(tablero: Tablero): string {
     return JSON.stringify(tablero);
   },
-  
+
   // Convertir JSON string a tablero desde SQL Server
   fromJson(tableroJson: string | Tablero): Tablero {
     if (typeof tableroJson === 'string') {
@@ -46,11 +52,12 @@ export class PartidaControlador {
         },
         orderBy: { fechaCreacion: 'desc' }
       });
-      
-      res.json({
-        exito: true,
-        datos: partidas
-      });
+
+    res.json({
+  exito: true,
+  datos: convertirBigIntAString(partidas)
+});
+
     } catch (error) {
       console.error('Error al obtener partidas:', error);
       res.status(500).json({
@@ -71,7 +78,7 @@ export class PartidaControlador {
         });
         return;
       }
-      
+
       const id = parseInt(idParam);
       if (isNaN(id)) {
         res.status(400).json({
@@ -97,11 +104,11 @@ export class PartidaControlador {
         });
         return;
       }
+res.json({
+  exito: true,
+  datos: convertirBigIntAString(partida)
+});
 
-      res.json({
-        exito: true,
-        datos: partida
-      });
     } catch (error) {
       console.error('Error al obtener partida:', error);
       res.status(500).json({
@@ -115,7 +122,7 @@ export class PartidaControlador {
   async crear(req: Request, res: Response): Promise<void> {
     try {
       const { jugador1Id, jugador2Id }: CrearPartidaDTO = req.body;
-      
+
       // Validar datos
       const errores = ValidadorPartida.validarCreacion({ jugador1Id, jugador2Id });
       if (errores.length > 0) {
@@ -161,8 +168,9 @@ export class PartidaControlador {
       res.status(201).json({
         exito: true,
         mensaje: 'Partida creada exitosamente',
-        datos: nuevaPartida
+        datos: convertirBigIntAString(nuevaPartida)
       });
+
     } catch (error) {
       console.error('Error al crear partida:', error);
       res.status(500).json({
@@ -183,7 +191,7 @@ export class PartidaControlador {
         });
         return;
       }
-      
+
       const partidaId = parseInt(idParam);
       if (isNaN(partidaId)) {
         res.status(400).json({
@@ -257,7 +265,7 @@ export class PartidaControlador {
 
       // Verificar si hay victoria
       const hayVictoria = LogicaConnect4.verificarVictoria(tablero, filaResultado, columnaIndice, partida.turnoActual);
-      
+
       // Verificar si hay empate
       const hayEmpate = LogicaConnect4.verificarEmpate(tablero);
 
@@ -270,13 +278,13 @@ export class PartidaControlador {
         datosActualizacion.estado = EstadoPartida.FINALIZADA;
         datosActualizacion.resultado = ResultadoPartida.VICTORIA;
         datosActualizacion.ganadorId = jugadorId;
-        
+
         // Actualizar estadísticas de los jugadores
         await this.actualizarEstadisticasJugadores(partida.jugador1Id, partida.jugador2Id, jugadorId);
       } else if (hayEmpate) {
         datosActualizacion.estado = EstadoPartida.FINALIZADA;
         datosActualizacion.resultado = ResultadoPartida.EMPATE;
-        
+
         // Actualizar estadísticas de empate
         await this.actualizarEstadisticasEmpate(partida.jugador1Id, partida.jugador2Id);
       }
@@ -303,14 +311,15 @@ export class PartidaControlador {
         }
       });
 
-      res.json({
-        exito: true,
-        mensaje: hayVictoria ? 'Victoria!' : hayEmpate ? 'Empate!' : 'Movimiento realizado',
-        datos: partidaActualizada,
-        partidaFinalizada: hayVictoria || hayEmpate,
-        ganador: hayVictoria ? jugadorId : null,
-        esEmpate: hayEmpate
-      });
+res.json({
+  exito: true,
+  mensaje: hayVictoria ? 'Victoria!' : hayEmpate ? 'Empate!' : 'Movimiento realizado',
+  datos: convertirBigIntAString(partidaActualizada),
+  partidaFinalizada: hayVictoria || hayEmpate,
+  ganador: hayVictoria ? jugadorId : null,
+  esEmpate: hayEmpate
+});
+
     } catch (error) {
       console.error('Error al realizar movimiento:', error);
       res.status(500).json({
@@ -331,7 +340,7 @@ export class PartidaControlador {
         });
         return;
       }
-      
+
       const partidaId = parseInt(idParam);
       if (isNaN(partidaId)) {
         res.status(400).json({
@@ -371,11 +380,12 @@ export class PartidaControlador {
         }
       });
 
-      res.status(201).json({
-        exito: true,
-        mensaje: 'Partida reiniciada exitosamente',
-        datos: nuevaPartida
-      });
+     res.status(201).json({
+  exito: true,
+  mensaje: 'Partida reiniciada exitosamente',
+  datos: convertirBigIntAString(nuevaPartida)
+});
+
     } catch (error) {
       console.error('Error al reiniciar partida:', error);
       res.status(500).json({
@@ -396,7 +406,7 @@ export class PartidaControlador {
         });
         return;
       }
-      
+
       const id = parseInt(idParam);
       if (isNaN(id)) {
         res.status(400).json({
@@ -422,11 +432,12 @@ export class PartidaControlador {
         }
       });
 
-      res.json({
-        exito: true,
-        mensaje: 'Partida actualizada exitosamente',
-        datos: partidaActualizada
-      });
+     res.json({
+  exito: true,
+  mensaje: 'Partida actualizada exitosamente',
+  datos: convertirBigIntAString(partidaActualizada)
+});
+
     } catch (error) {
       console.error('Error al actualizar partida:', error);
       res.status(500).json({

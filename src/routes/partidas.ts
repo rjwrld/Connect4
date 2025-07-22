@@ -14,7 +14,7 @@ router.get('/:id', partidaControlador.obtenerPorId);
 router.post('/', partidaControlador.crear);
 
 // POST /api/partidas/:id/movimiento - Realizar movimiento en partida
-router.post('/:id/movimiento', partidaControlador.realizarMovimiento);
+router.post('/:id/movimiento', partidaControlador.realizarMovimiento.bind(partidaControlador));
 
 // POST /api/partidas/:id/reiniciar - Reiniciar partida con los mismos jugadores
 router.post('/:id/reiniciar', partidaControlador.reiniciar);
