@@ -1,0 +1,36 @@
+{
+  "name": "connect4",
+  "version": "1.0.0",
+  "description": "Juego Connect4 desarrollado con Node.js, TypeScript y SQL Server",
+  "main": "dist/backend/app.js",
+  "scripts": {
+    "dev": "nodemon src/backend/app.ts",
+    "build": "tsc",
+    "start": "node dist/backend/app.js",
+    "db:generate": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev",
+    "db:reset": "npx prisma migrate reset",
+    "db:studio": "npx prisma studio",
+    "db:push": "npx prisma db push",
+    "test": "node tests/test-db-connection.js",
+    "setup": "powershell -ExecutionPolicy Bypass -File scripts/setup.ps1",
+    "quick-start": "powershell -ExecutionPolicy Bypass -File scripts/start.ps1"
+  },
+  "keywords": ["connect4", "nodejs", "typescript", "sqlserver", "game"],
+  "author": "Josue Calderon Barrantes",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Jugador {
+  id                   Int          @id(map: "PK_jugador") @default(autoincrement())
+  identificacion       BigInt       @unique(map: "UQ_jugador_identificacion")
+  nombre               String       @db.NVarChar(255)
+  partidasGanadas      Int          @default(0, map: "DF__jugador__partida__5DCAEF64") @map("partidas_ganadas")
+  partidasPerdidas     Int          @default(0, map: "DF__jugador__partida__5EBF139D") @map("partidas_perdidas")
+  partidasEmpatadas    Int          @default(0, map: "DF__jugador__partida__5FB337D6") @map("partidas_empatadas")
+  marcador             Int          @default(0, map: "DF__jugador__marcado__60A75C0F")
+  fechaCreacion        DateTime     @default(now(), map: "DF__jugador__fecha_c__619B8048") @map("fecha_creacion")
+  fechaActualizacion   DateTime     @default(now(), map: "DF__jugador__fecha_a__628FA481") @updatedAt @map("fecha_actualizacion")
+  movimientos          Movimiento[]
+  partidasGanador      Partida[]    @relation("Ganador")
+  partidasComoJugador1 Partida[]    @relation("Jugador1")
+  partidasComoJugador2 Partida[]    @relation("Jugador2")
+
+  @@map("jugador")
+}
+
+model Partida {
+  id                 Int          @id(map: "PK_partidas") @default(autoincrement())
+  jugador1Id         Int          @map("jugador1_id")
+  jugador2Id         Int          @map("jugador2_id")
+  estado             String       @default("en_curso", map: "DF__partidas__estado__656C112C") @db.NVarChar(20)
+  ganadorId          Int?         @map("ganador_id")
+  resultado          String?      @db.NVarChar(10)
+  tablero            String       @default("[]", map: "DF__partidas__tabler__66603565") @db.NVarChar(Max)
+  turnoActual        Int          @default(1, map: "DF__partidas__turno___6754599E") @map("turno_actual")
+  fechaCreacion      DateTime     @default(now(), map: "DF__partidas__fecha___68487DD7") @map("fecha_creacion")
+  fechaActualizacion DateTime     @default(now(), map: "DF__partidas__fecha___693CA210") @updatedAt @map("fecha_actualizacion")
+  movimientos        Movimiento[]
+  ganador            Jugador?     @relation("Ganador", fields: [ganadorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_partidas_ganador")
+  jugador1           Jugador      @relation("Jugador1", fields: [jugador1Id], references: [id], onUpdate: NoAction, map: "FK_partidas_jugador1")
+  jugador2           Jugador      @relation("Jugador2", fields: [jugador2Id], references: [id], onUpdate: NoAction, map: "FK_partidas_jugador2")
+
+  @@map("partidas")
+}
+
+model Movimiento {
+  id               Int      @id(map: "PK_movimientos") @default(autoincrement())
+  partidaId        Int      @map("partida_id")
+  jugadorId        Int      @map("jugador_id")
+  columnaLetra     String   @map("columna_letra") @db.NChar(1)
+  filaPosicion     Int      @map("fila_posicion")
+  numeroMovimiento Int      @map("numero_movimiento")
+  fechaCreacion    DateTime @default(now(), map: "DF__movimient__fecha__6EF57B66") @map("fecha_creacion")
+  jugador          Jugador  @relation(fields: [jugadorId], references: [id], onUpdate: NoAction, map: "FK_movimientos_jugador")
+  partida          Partida  @relation(fields: [partidaId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_movimientos_partida")
+
+  @@map("movimientos")
+}
+
+model Jugador_backup {
+  idJugador                                                Int              @id(map: "PK__Jugador__73F34C02CE489A7D")
+  nombre                                                   String           @db.NVarChar(100)
+  marcador                                                 Int              @default(0, map: "DF__Jugador__marcado__49C3F6B7")
+  Partida_backup_Partida_backup_idJugador1ToJugador_backup Partida_backup[] @relation("Partida_backup_idJugador1ToJugador_backup")
+  Partida_backup_Partida_backup_idJugador2ToJugador_backup Partida_backup[] @relation("Partida_backup_idJugador2ToJugador_backup")
+}
+
+model Partida_backup {
+  idPartida                                                Int            @id(map: "PK__Partida__552192F6EC042774") @default(autoincrement())
+  idJugador1                                               Int
+  idJugador2                                               Int
+  estadoTablero                                            String         @db.NVarChar(Max)
+  historialMovimientos                                     String?        @db.NVarChar(Max)
+  resultado                                                String?        @db.NVarChar(50)
+  fechaInicio                                              DateTime?      @default(now(), map: "DF__Partida__fechaIn__571DF1D5") @db.DateTime
+  Jugador_backup_Partida_backup_idJugador1ToJugador_backup Jugador_backup @relation("Partida_backup_idJugador1ToJugador_backup", fields: [idJugador1], references: [idJugador], onUpdate: NoAction, map: "FK__Partida__idJugad__5812160E")
+  Jugador_backup_Partida_backup_idJugador2ToJugador_backup Jugador_backup @relation("Partida_backup_idJugador2ToJugador_backup", fields: [idJugador2], references: [idJugador], onUpdate: NoAction, map: "FK__Partida__idJugad__59063A47")
+}

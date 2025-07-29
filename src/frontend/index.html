@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect4 - Juego</title>
+    <link rel="stylesheet" href="css/principal.css">
+    <link rel="stylesheet" href="css/juego.css">
+    <link rel="stylesheet" href="css/componentes.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <h1>Connect4</h1>
+            <nav class="nav-principal">
+                <button id="btn-menu-header" class="btn-nav">Menú Principal</button>
+            </nav>
+            <!-- Contenedor para mensajes generales -->
+            <div id="mensaje-general" class="mensaje-container"></div>
+        </header>
+
+        <!-- Menú Principal -->
+        <div id="menu-principal" class="pantalla activa">
+            <div class="contenido-principal">
+                <h2>Bienvenido a Connect4</h2>
+                <p>Selecciona una opción para comenzar:</p>
+                <div class="opciones-menu">
+                    <button id="btn-crear-jugador" class="btn btn-primary">
+                        📝 Crear Jugador Nuevo
+                    </button>
+                    <button id="btn-crear-partida" class="btn btn-primary">
+                        🎮 Crear Partida Nueva
+                    </button>
+                    <button id="btn-cargar-partida" class="btn btn-primary">
+                        📂 Cargar Partida Existente
+                    </button>
+                    <button id="btn-escalafon" class="btn btn-primary">
+                        🏆 Mostrar Escalafón
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crear Jugador -->
+        <div id="crear-jugador" class="pantalla">
+            <div class="contenido-pantalla">
+                <div class="header-pantalla">
+                    <button onclick="regresarPantallaAnterior()" class="btn-regresar" title="Regresar">
+                        ← Regresar
+                    </button>
+                    <h2>Crear Jugador Nuevo</h2>
+                </div>
+                <form id="form-crear-jugador" class="formulario">
+                    <div class="campo">
+                        <label for="identificacion">Identificación:</label>
+                        <input type="number" id="identificacion" name="identificacion" 
+                               placeholder="Ingrese número de identificación" required>
+                        <small class="texto-ayuda">El nombre se completará automáticamente</small>
+                    </div>
+                    <div class="campo">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" 
+                               placeholder="Se llenará automáticamente..." readonly required maxlength="255">
+                    </div>
+                    <div class="botones">
+                        <button type="submit" class="btn btn-success">Crear Jugador</button>
+                        <button type="button" id="btn-cancelar-jugador" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+                <div id="mensaje-jugador" class="mensaje"></div>
+            </div>
+        </div>
+
+        <!-- Crear Partida -->
+        <div id="crear-partida" class="pantalla">
+            <div class="contenido-pantalla">
+                <div class="header-pantalla">
+                    <button onclick="regresarPantallaAnterior()" class="btn-regresar" title="Regresar">
+                        ← Regresar
+                    </button>
+                    <h2>Crear Partida Nueva</h2>
+                </div>
+                <form id="form-crear-partida" class="formulario">
+                    <div class="campo">
+                        <label for="jugador1">Jugador #1:</label>
+                        <select id="jugador1" name="jugador1" required>
+                            <option value="">Seleccione un jugador</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="jugador2">Jugador #2:</label>
+                        <select id="jugador2" name="jugador2" required>
+                            <option value="">Seleccione un jugador</option>
+                        </select>
+                    </div>
+                    <div class="botones">
+                        <button type="submit" class="btn btn-success">Crear Partida</button>
+                        <button type="button" id="btn-cancelar-partida" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+                <div id="mensaje-partida" class="mensaje"></div>
+            </div>
+        </div>
+
+        <!-- Juego -->
+        <div id="juego" class="pantalla">
+            <div class="contenido-juego">
+                <div class="header-pantalla">
+                    <button onclick="regresarPantallaAnterior()" class="btn-regresar" title="Regresar al menú">
+                        ← Menú
+                    </button>
+                    <div class="info-partida">
+                        <h2>Partida en Curso</h2>
+                        <div class="jugadores-info">
+                            <div class="jugador-info jugador1">
+                                <span class="ficha-jugador ficha-roja">●</span>
+                                <span id="nombre-jugador1"></span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="jugador-info jugador2">
+                                <span class="ficha-jugador ficha-amarilla">●</span>
+                                <span id="nombre-jugador2"></span>
+                            </div>
+                        </div>
+                        <div id="turno-actual" class="turno-actual">
+                            Es el turno de: <span id="jugador-turno"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tablero de Juego -->
+                <div class="contenedor-tablero">
+                    <div class="botones-columna">
+                        <button onclick="jugarColumna('A')" class="btn-columna" data-columna="A">A</button>
+                        <button onclick="jugarColumna('B')" class="btn-columna" data-columna="B">B</button>
+                        <button onclick="jugarColumna('C')" class="btn-columna" data-columna="C">C</button>
+                        <button onclick="jugarColumna('D')" class="btn-columna" data-columna="D">D</button>
+                        <button onclick="jugarColumna('E')" class="btn-columna" data-columna="E">E</button>
+                        <button onclick="jugarColumna('F')" class="btn-columna" data-columna="F">F</button>
+                        <button onclick="jugarColumna('G')" class="btn-columna" data-columna="G">G</button>
+                    </div>
+                    
+                    <table id="tablero-juego" class="tablero-connect4">
+                        <tbody id="cuerpo-tablero">
+                            <!-- Las filas se generan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="controles-juego">
+                    <button onclick="reiniciarPartida()" class="btn btn-warning">🔄 Reiniciar Partida</button>
+                    <button onclick="mostrarMenuPrincipal()" class="btn btn-secondary">🏠 Menú Principal</button>
+                </div>
+
+                <div id="resultado-juego" class="resultado-juego"></div>
+            </div>
+        </div>
+
+        <!-- Cargar Partida -->
+        <div id="cargar-partida" class="pantalla">
+            <div class="contenido-pantalla">
+                <div class="header-pantalla">
+                    <button onclick="regresarPantallaAnterior()" class="btn-regresar" title="Regresar">
+                        ← Regresar
+                    </button>
+                    <h2>Cargar Partida Existente</h2>
+                </div>
+                <div id="lista-partidas" class="lista-partidas">
+                    <!-- Las partidas se cargan dinámicamente -->
+                </div>
+                <div class="botones">
+                    <button id="btn-volver-cargar" class="btn btn-secondary">Volver al Menú</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Escalafón -->
+        <div id="escalafon" class="pantalla">
+            <div class="contenido-pantalla">
+                <div class="header-pantalla">
+                    <button onclick="regresarPantallaAnterior()" class="btn-regresar" title="Regresar">
+                        ← Regresar
+                    </button>
+                    <h2>Escalafón de Jugadores</h2>
+                </div>
+                <div class="tabla-container">
+                    <table id="tabla-escalafon" class="tabla-escalafon">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Identificación</th>
+                                <th>Nombre</th>
+                                <th>Marcador</th>
+                                <th>Ganadas</th>
+                                <th>Perdidas</th>
+                                <th>Empatadas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-escalafon">
+                            <!-- Los datos se cargan dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="botones">
+                    <button onclick="cargarEscalafon()" class="btn btn-primary">🔄 Actualizar</button>
+                    <button id="btn-volver-escalafon" class="btn btn-secondary">Volver al Menú</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay mejorado -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+        <small>Conectando con el servidor...</small>
+    </div>
+
+    <!-- Modal de confirmación para crear jugador -->
+    <div id="modal-confirmar-jugador" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>🎯 Confirmar Creación de Jugador</h3>
+                <button class="modal-close" onclick="cerrarModalConfirmacion()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmacion-info">
+                    <div class="info-field">
+                        <label>📋 Identificación:</label>
+                        <span id="modal-identificacion"></span>
+                    </div>
+                    <div class="info-field">
+                        <label>👤 Nombre:</label>
+                        <span id="modal-nombre"></span>
+                    </div>
+                    <div class="info-field">
+                        <label>📍 Fuente:</label>
+                        <span id="modal-fuente"></span>
+                    </div>
+                </div>
+                <div class="confirmacion-pregunta">
+                    <p>¿Está seguro que desea crear este jugador?</p>
+                    <small>Una vez creado, el jugador aparecerá en la lista y podrá participar en partidas.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="cerrarModalConfirmacion()" class="btn btn-secondary">
+                    ❌ Cancelar
+                </button>
+                <button onclick="confirmarCrearJugador()" class="btn btn-success">
+                    ✅ Crear Jugador
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de éxito después de crear jugador -->
+    <div id="modal-exito-jugador" class="modal-overlay">
+        <div class="modal-container modal-exito">
+            <div class="modal-header modal-header-exito">
+                <h3>🎉 ¡Jugador Creado Exitosamente!</h3>
+            </div>
+            <div class="modal-body">
+                <div class="exito-info">
+                    <div class="icono-exito">
+                        <div class="check-animation">✓</div>
+                    </div>
+                    <div class="datos-jugador-creado">
+                        <div class="info-field">
+                            <label>👤 Nombre:</label>
+                            <span id="exito-nombre" class="nombre-destacado"></span>
+                        </div>
+                        <div class="info-field">
+                            <label>📋 Identificación:</label>
+                            <span id="exito-identificacion"></span>
+                        </div>
+                        <div class="info-field">
+                            <label>🎯 Marcador inicial:</label>
+                            <span id="exito-marcador" class="marcador-inicial">0</span>
+                        </div>
+                    </div>
+                    <div class="mensaje-exito">
+                        <p>El jugador ha sido registrado correctamente y ya puede participar en partidas.</p>
+                        <div class="auto-redirect">
+                            <small>Regresando al menú principal en <span id="countdown">3</span> segundos...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="irAlMenuPrincipal()" class="btn btn-primary">
+                    🏠 Ir al Menú Principal
+                </button>
+                <button onclick="crearOtroJugador()" class="btn btn-secondary">
+                    ➕ Crear Otro Jugador
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de resultado de partida -->
+    <div id="modal-resultado-partida" class="modal-overlay">
+        <div class="modal-container modal-resultado">
+            <div class="modal-header modal-header-resultado">
+                <div class="trofeo-container">
+                    <div id="trofeo-icono" class="trofeo-icono">🏆</div>
+                </div>
+                <h3 id="titulo-resultado">¡Partida Finalizada!</h3>
+            </div>
+            <div class="modal-body">
+                <div class="resultado-info">
+                    <div id="mensaje-resultado" class="mensaje-resultado">
+                        <!-- El mensaje se llenará dinámicamente -->
+                    </div>
+                    <div class="jugadores-finales">
+                        <div class="jugador-final">
+                            <div class="ficha-jugador-final ficha-roja">●</div>
+                            <span id="resultado-jugador1" class="nombre-jugador-final"></span>
+                            <span id="estado-jugador1" class="estado-jugador"></span>
+                        </div>
+                        <div class="vs-final">VS</div>
+                        <div class="jugador-final">
+                            <div class="ficha-jugador-final ficha-amarilla">●</div>
+                            <span id="resultado-jugador2" class="nombre-jugador-final"></span>
+                            <span id="estado-jugador2" class="estado-jugador"></span>
+                        </div>
+                    </div>
+                    <div id="estadisticas-partida" class="estadisticas-partida">
+                        <!-- Información adicional de la partida -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-resultado">
+                <button onclick="jugarDeNuevo()" class="btn btn-success btn-principal">
+                    🎮 Jugar de Nuevo
+                </button>
+                <button onclick="cerrarModalResultadoYMenuPrincipal()" class="btn btn-primary">
+                    🏠 Menú Principal
+                </button>
+                <button onclick="cerrarModalResultadoYEscalafon()" class="btn btn-secondary">
+                    🏆 Ver Escalafón
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/jugadores.js"></script>
+    <script src="js/juego.js"></script>
+    <script src="js/escalafon.js"></script>
+    <script src="js/principal.js"></script>
+</body>
+</html> 
