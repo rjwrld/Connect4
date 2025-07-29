@@ -13,6 +13,139 @@ Juego Connect4 desarrollado con Node.js, TypeScript y SQL Server con arquitectur
 - **Frontend**: HTML5 + CSS3 + JavaScript (Vanilla)
 - **Herramientas**: nodemon, ts-node, Prisma Studio
 
+## 🛠️ Frameworks y Herramientas Detalladas
+
+### **Backend**
+- **Express.js**: Framework web para Node.js
+- **TypeScript**: Superset de JavaScript con tipado estático
+- **Prisma ORM**: Moderno ORM para SQL Server
+- **cors**: Middleware para manejo de CORS
+- **nodemon**: Herramienta de desarrollo para reinicio automático
+- **ts-node**: Ejecutor directo de TypeScript
+
+### **Base de Datos**
+- **SQL Server**: Sistema de gestión de bases de datos relacionales de Microsoft
+- **Prisma Client**: Cliente generado automáticamente para interacción con BD
+- **Prisma Studio**: Interfaz gráfica para explorar y editar datos
+
+### **Frontend**
+- **HTML5**: Estructura semántica moderna
+- **CSS3**: Estilos avanzados con Flexbox y Grid
+- **JavaScript (Vanilla)**: Sin frameworks, JavaScript puro
+- **API Fetch**: Para comunicación con el backend
+
+### **Herramientas de Desarrollo**
+- **PowerShell Scripts**: Automatización de configuración
+- **npm**: Gestor de paquetes y scripts
+- **Git**: Control de versiones
+
+## 🏗️ Tipo de Aplicación
+
+**SPA (Single Page Application)**
+
+La aplicación es una **Single Page Application** que:
+- Carga una sola página HTML (`index.html`)
+- Maneja la navegación dinámicamente con JavaScript
+- Utiliza diferentes "pantallas" que se muestran/ocultan según la acción del usuario
+- Comunica con el backend a través de APIs REST sin recargar la página
+- Mantiene el estado de la aplicación en el lado del cliente
+
+## 🏛️ Arquitectura del Sistema
+
+**MVC (Model-View-Controller)**
+
+La aplicación sigue el patrón **MVC** con separación clara de responsabilidades:
+
+### **📊 Models (Modelos)**
+- **Ubicación**: `src/backend/models/`
+- **Responsabilidad**: Definición de estructuras de datos y lógica de dominio
+- **Archivos**: `Jugador.ts`, `Partida.ts`, `JugadorSimple.ts`
+
+### **🎨 Views (Vistas)**
+- **Ubicación**: `src/frontend/`
+- **Responsabilidad**: Interfaz de usuario y presentación
+- **Componentes**: HTML, CSS, JavaScript del cliente
+
+### **🎯 Controllers (Controladores)**
+- **Ubicación**: `src/backend/controllers/`
+- **Responsabilidad**: Lógica de negocio y manejo de peticiones
+- **Archivos**: `JugadorControlador.ts`, `PartidaControlador.ts`, `EscalafonControlador.ts`
+
+### **🛣️ Routes (Rutas)**
+- **Ubicación**: `src/backend/routes/`
+- **Responsabilidad**: Definición de endpoints y enrutamiento
+- **Archivos**: `jugadores.ts`, `partidas.ts`, `escalafon.ts`, `consultar-nombre.ts`
+
+### **🔌 API REST**
+- Comunicación cliente-servidor mediante HTTP
+- Formato JSON para intercambio de datos
+- Endpoints RESTful bien definidos
+
+## 🗄️ Diagrama de Base de Datos
+
+La base de datos utiliza **SQL Server** con las siguientes entidades principales:
+
+```mermaid
+
+    Jugador {
+        int id PK
+        bigint identificacion UK "Número de identificación único"
+        nvarchar(255) nombre "Nombre del jugador"
+        int partidasGanadas "Partidas ganadas"
+        int partidasPerdidas "Partidas perdidas" 
+        int partidasEmpatadas "Partidas empatadas"
+        int marcador "Puntaje del jugador"
+        datetime fechaCreacion "Fecha de creación"
+        datetime fechaActualizacion "Fecha de actualización"
+    }
+    
+    Partida {
+        int id PK
+        int jugador1Id FK "ID del jugador 1"
+        int jugador2Id FK "ID del jugador 2"
+        nvarchar(20) estado "Estado: en_curso, finalizada"
+        int ganadorId FK "ID del ganador (opcional)"
+        nvarchar(10) resultado "Resultado: victoria, empate"
+        nvarchar(max) tablero "Estado del tablero (JSON)"
+        int turnoActual "Turno actual (1 o 2)"
+        datetime fechaCreacion "Fecha de creación"
+        datetime fechaActualizacion "Fecha de actualización"
+    }
+    
+    Movimiento {
+        int id PK
+        int partidaId FK "ID de la partida"
+        int jugadorId FK "ID del jugador"
+        nchar(1) columnaLetra "Columna (A-G)"
+        int filaPosicion "Posición en la fila"
+        int numeroMovimiento "Número del movimiento"
+        datetime fechaCreacion "Fecha del movimiento"
+    }
+    
+    Jugador ||--o{ Partida : "participa como jugador1"
+    Jugador ||--o{ Partida : "participa como jugador2"
+    Jugador ||--o{ Partida : "gana partidas"
+    Jugador ||--o{ Movimiento : "realiza movimientos"
+    Partida ||--o{ Movimiento : "contiene movimientos"
+```
+
+### **Descripción de Entidades**
+
+#### **🎮 Jugador**
+- **Propósito**: Almacena información de los jugadores registrados
+- **Campos clave**: identificación única, estadísticas de partidas, marcador
+- **Relaciones**: Puede participar en múltiples partidas y realizar movimientos
+
+#### **⚔️ Partida**
+- **Propósito**: Representa una partida de Connect4 entre dos jugadores
+- **Campos clave**: estado del juego, tablero (JSON), turno actual
+- **Relaciones**: Conecta dos jugadores y contiene múltiples movimientos
+
+#### **🎯 Movimiento**
+- **Propósito**: Registra cada movimiento realizado en una partida
+- **Campos clave**: posición (columna + fila), número de secuencia
+- **Relaciones**: Pertenece a una partida específica y un jugador
+
 ## 📁 Estructura del Proyecto
 
 ```
