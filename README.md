@@ -3,8 +3,9 @@
 Juego Connect4 desarrollado con Node.js, TypeScript y SQL Server con arquitectura moderna y organizada.
 
 ## 👨‍💻 Estudiante
-- **Josue Calderon Barrantes**
-
+- **Josue Calderon Barrantes FI20019605**
+- **Darrel Sanchez Villalobos FI23029796**
+- **Jose Pablo Vega Valverde FI23030050** 
 ## 🚀 Tecnologías Utilizadas
 
 - **Backend**: Node.js + Express + TypeScript
