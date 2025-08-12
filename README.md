@@ -2,7 +2,7 @@
 
 Juego Connect4 desarrollado con Node.js, TypeScript y SQL Server con arquitectura moderna y organizada.
 
-## 👨‍💻 Estudiante
+## 👨‍💻 Estudiantes
 - **Josue Calderon Barrantes FI20019605**
 - **Darrel Sanchez Villalobos FI23029796**
 - **Jose Pablo Vega Valverde FI23030050** 
@@ -85,22 +85,24 @@ La aplicación sigue el patrón **MVC** con separación clara de responsabilidad
 
 La base de datos utiliza **SQL Server** con las siguientes entidades principales:
 
-```mermaid
+### 📊 Diagrama de Entidad-Relación
 
-    Jugador {
-        int id PK
-        bigint identificacion UK "Número de identificación único"
+```mermaid
+erDiagram
+    JUGADOR {
+        int id PK "Clave primaria"
+        bigint identificacion UK "Identificación única"
         nvarchar(255) nombre "Nombre del jugador"
         int partidasGanadas "Partidas ganadas"
-        int partidasPerdidas "Partidas perdidas" 
+        int partidasPerdidas "Partidas perdidas"
         int partidasEmpatadas "Partidas empatadas"
-        int marcador "Puntaje del jugador"
+        int marcador "Puntaje total"
         datetime fechaCreacion "Fecha de creación"
         datetime fechaActualizacion "Fecha de actualización"
     }
-    
-    Partida {
-        int id PK
+
+    PARTIDA {
+        int id PK "Clave primaria"
         int jugador1Id FK "ID del jugador 1"
         int jugador2Id FK "ID del jugador 2"
         nvarchar(20) estado "Estado: en_curso, finalizada"
@@ -111,9 +113,9 @@ La base de datos utiliza **SQL Server** con las siguientes entidades principales
         datetime fechaCreacion "Fecha de creación"
         datetime fechaActualizacion "Fecha de actualización"
     }
-    
-    Movimiento {
-        int id PK
+
+    MOVIMIENTO {
+        int id PK "Clave primaria"
         int partidaId FK "ID de la partida"
         int jugadorId FK "ID del jugador"
         nchar(1) columnaLetra "Columna (A-G)"
@@ -121,13 +123,20 @@ La base de datos utiliza **SQL Server** con las siguientes entidades principales
         int numeroMovimiento "Número del movimiento"
         datetime fechaCreacion "Fecha del movimiento"
     }
-    
-    Jugador ||--o{ Partida : "participa como jugador1"
-    Jugador ||--o{ Partida : "participa como jugador2"
-    Jugador ||--o{ Partida : "gana partidas"
-    Jugador ||--o{ Movimiento : "realiza movimientos"
-    Partida ||--o{ Movimiento : "contiene movimientos"
+
+    JUGADOR ||--o{ PARTIDA : "participa como jugador1"
+    JUGADOR ||--o{ PARTIDA : "participa como jugador2"
+    JUGADOR ||--o{ PARTIDA : "gana partidas"
+    JUGADOR ||--o{ MOVIMIENTO : "realiza movimientos"
+    PARTIDA ||--o{ MOVIMIENTO : "contiene movimientos"
 ```
+
+### 🎯 Relaciones Principales
+
+- **Jugador ↔ Partida**: Un jugador puede participar en múltiples partidas como jugador1 o jugador2
+- **Jugador ↔ Partida**: Un jugador puede ganar múltiples partidas (relación opcional)
+- **Jugador ↔ Movimiento**: Un jugador puede realizar múltiples movimientos
+- **Partida ↔ Movimiento**: Una partida contiene múltiples movimientos (cascade delete)
 
 ### **Descripción de Entidades**
 
@@ -306,13 +315,8 @@ NODE_ENV=development
 - 📝 **[Migración SQL Server](docs/MIGRATION_SQLSERVER.md)** - Proceso de migración
 - 🎯 **[Entrega del Proyecto](docs/ENTREGA_COMPANEROS.md)** - Información para compañeros
 
-## 🤝 Contribución
 
-Este es un proyecto académico. Las mejoras y sugerencias son bienvenidas a través de issues y pull requests.
 
-## 📄 Licencia
-
-MIT License - ver [LICENSE](LICENSE) para más detalles.
 
 ---
 
